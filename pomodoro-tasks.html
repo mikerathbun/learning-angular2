@@ -6,7 +6,7 @@
         <span class="small"> (Estimated time: {{ queuedPomodoros*25 | pomodoroFormattedTime }})</span>
     </h3>
     <p>
-        <span *ngFor="let queuedTask of tasks">
+        <span *ngFor="let queuedTask of tasks | pomodoroQueuedOnly: true">
             <pomodoro-task-icons
                 [task]="queuedTask"
                 size="50"

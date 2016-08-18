@@ -69,9 +69,16 @@ class FormattedTimePipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'pomodoroFormattedTime'
+    name: 'pomodoroQueuedOnly',
+    pure: false
 })
-
+class QueuedOnlyPipe implements PipeTransform {
+    transform(tasks: Task[], ...args: any[]): Task[] {
+        return tasks.filter((task: Task) => {
+            return task.queued === args[0];
+        });
+    }
+}
 /// Component classes
 
 
@@ -101,7 +108,7 @@ class TaskIconsComponent implements OnInit {
 @Component({
     selector: 'pomodoro-tasks',
     directives: [TaskIconsComponent],
-    pipes: [FormattedTimePipe],
+    pipes: [FormattedTimePipe, QueuedOnlyPipe],
     styleUrls: ['pomodoro-tasks.css'],
     templateUrl: 'pomodoro-tasks.html'
 })
