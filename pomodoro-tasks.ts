@@ -79,9 +79,32 @@ class QueuedOnlyPipe implements PipeTransform {
         });
     }
 }
+
+/// Directives
+
+@Directive({
+    selector: '[task]'
+})
+class TaskTooltipDirective {
+    private defaultTooltipText: string;
+    @Input() task: Task;
+    @Input() taskTooltip: any;
+
+    @HostListener('mouseover')
+    onMouseOver() {
+        if(!this.defaultTooltipText && this.taskTooltip) {
+            this.defaultTooltipText = this.taskTooltip.innerText;
+        }
+        this.taskTooltip.innerText = this.task.name;
+    }
+    @HostListener('mouseout')
+    onMouseOut() {
+        if(this.taskTooltip) {
+            this.taskTooltip.innerText = this.defaultTooltipText;
+        }
+    }
+}
 /// Component classes
-
-
 
 @Component({
     selector: 'pomodoro-task-icons',
@@ -100,14 +123,11 @@ class TaskIconsComponent implements OnInit {
     }
 }
 
-
-
-
 /// - Main Parent Component
 
 @Component({
     selector: 'pomodoro-tasks',
-    directives: [TaskIconsComponent],
+    directives: [TaskIconsComponent, TaskTooltipDirective],
     pipes: [FormattedTimePipe, QueuedOnlyPipe],
     styleUrls: ['pomodoro-tasks.css'],
     templateUrl: 'pomodoro-tasks.html'
